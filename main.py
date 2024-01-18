@@ -7,18 +7,25 @@ def get_input_loop():
     stops when the user give the input "end"
     """
     my_calculator = calculator.Calculator()
-    expression = input("give expression: ")
+    expression = ""
+
     while expression != "end":
+
         try:
+            expression = input("give expression: ")
             num = my_calculator.calculate_expression(expression)
             print("result: \t", num)
 
+        except EOFError as e:
+            print("there is end of file !")
+            expression = "end"
+
+        except KeyboardInterrupt as e:
+            print("interrupted")
+            expression = "end"
 
         except Exception as e:
             print(e)
-
-        print("\n")
-        expression = input("give expression: ")
 
     print("calculator ends !")
 
