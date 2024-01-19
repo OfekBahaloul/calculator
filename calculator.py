@@ -85,8 +85,12 @@ class Calculator:
         :param expression: a string representation of a math expression
         :return: a clean expression, without white spaces, without rows of --, without type error and more
         """
+        # remove all white spaces
+        expression = expression.replace(' ', '')
+        expression = expression.replace('\t', '')
+
         if len(expression) == 0:
-            raise TypeError("you did not any thing !")
+            expression = "0"
 
         # check if the expression is a string
         if not isinstance(expression, str):
@@ -98,18 +102,14 @@ class Calculator:
             is_dot = char == '.'  # is this char a dot ?
             is_parenthesis = char == ')' or char == '('  # is this char a parenthesis ?
             is_operator = char in self.all_operators.keys()  # is this char a valid operator ?
-            is_space = char == ' ' or char == '\t'  # is this char a space or a tab ?
 
             # a letter is valid if it's one of the following chars
             # if he is not one of those then he in invalid
-            is_valid = is_number or is_dot or is_parenthesis or is_operator or is_space
+            is_valid = is_number or is_dot or is_parenthesis or is_operator
             if not is_valid:
                 messege = "this is not a valid letter: " + char
                 raise ValueError(messege)
 
-        # remove all white spaces
-        expression = expression.replace(' ', '')
-        expression = expression.replace('\t', '')
 
         # check for paris of parenthesis and blanks parenthesis
         parenthesis_symmetric_counter = 0
@@ -194,12 +194,15 @@ class Calculator:
                 expression_list.append(value)
                 index = end_index
 
-        for i in range(len(expression_list)):
+        i = 0
+        while i < len(expression_list):
             # if there is already sometihng on the expression list and its an atribute then check if you should
             # convert its type into an onary or remove complitly if doubled and onary
             if isinstance(expression_list[i], BaseOperator.AttributeOperator):
                 attribute = expression_list[i]
                 i = attribute.apply_attribute(expression_list, i)
+
+            i += 1
 
         # check for directional operators if their direction is valide -> ~5 !=  5~
         for i in range(0, len(expression_list)):

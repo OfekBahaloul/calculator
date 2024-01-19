@@ -18,7 +18,7 @@ class Operator:
         # Create a new instance with the same attribute values
         return self.__class__()
 
-    def calc_operation(self, expression_list: list, my_index: int) -> list[list, int]:
+    def calc_operation(self, expression_list: list, my_index: int):
         """
 
         :param expression_list: the list where all the operators and operands are
@@ -58,7 +58,7 @@ class Operator:
                                                                                          "there is an"
                                                                                          "incorrect value!")
 
-            # if from the left side of an right operator there is an
+        # if from the left side of an right operator there is an
 
         if self.direction == "left":
             # if there is no left then error because it cant be placed in the end !
@@ -76,6 +76,14 @@ class Operator:
 
                     raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
                                                                                          "incorrect value!")
+
+        # if to the left of the operator there is ( then its wrong !
+        if self.direction == "both":
+            if index != 0:
+                to_left = expression_list[index - 1]
+                if isinstance(to_left, str) and to_left == "(":
+                    raise TypeError("at index: ", index, "there is a ", self.signature, "and to his left there is ( "
+                                                                                        "which should not be there")
 
 
     def _get_operands(self, expression_list: list, my_index: int) -> list:
@@ -138,24 +146,6 @@ class AttributeOperator(Operator):
 
         return result_expression
 
-    def check_direction_correct(self, expression_list: list, index: int):
-        """
-
-        :param expression_list: the list that contains all of the parts of an expression
-        :param index: the index of the current operator
-        :return: nothing, check if i am an onary and if to my direction there is an operator that not myself, if so then
-        its a problam
-        """
-        Operator.check_direction_correct(self, expression_list, index)
-
-        # check direction right
-        if self.direction == "right":
-            if index < len(expression_list) + 1:
-                next_to_me = expression_list[index + 1]
-                if isinstance(next_to_me, Operator):
-                    if next_to_me.signature != self.signature:
-                        raise TypeError("at index ", index, "there is ", self.signature, " and there is to his right a"
-                                                                                         "", next_to_me.signature)
     def apply_attribute(self, expression_list: list, index: int) -> int:
         """
 
@@ -166,10 +156,16 @@ class AttributeOperator(Operator):
         # if i am alone or double -> aka is there - or --
         # if i am double then check if i should delte myself
         if self.__is_double(expression_list, index):
+            # sadly must check if to my right there is an onary type because when i delete the -- then
+            # the bad expression becomed good
+            if self.__check_if_right_is_onary(expression_list, index):
+                raise TypeError("at index ", index, "there is ", self.signature, " and there is to his right an"
+                                                                                 "operator")
+
             # if its the end then, change both to prime onary
             if index == 1:
-                expression_list.pop()
-                expression_list.pop()
+                expression_list.pop(index)
+                expression_list.pop(index - 1)
                 return index - 2
 
             # the value after the double --
@@ -178,16 +174,18 @@ class AttributeOperator(Operator):
             # if the far value is an operator but not left you can delete it
             if isinstance(far_value, Operator):
                 if not far_value.direction == "left":
-                    expression_list.pop()
-                    expression_list.pop()
+                    expression_list.pop(index)
+                    expression_list.pop(index - 1)
                     return index - 2
 
             # if its ( then remove
             if isinstance(far_value, str):
                 if far_value == '(':
-                    expression_list.pop()
-                    expression_list.pop()
+                    expression_list.pop(index)
+                    expression_list.pop(index - 1)
                     return index - 2
+
+
 
         # if i am the first elemnt then i am onary
         if index == 0:
@@ -233,11 +231,31 @@ class AttributeOperator(Operator):
         :param index:
         :return:
         """
-        if index >= 2:
+        if index >= 1:
             before_me = expression_list[index - 1]
             if isinstance(before_me, Operator):
                 if before_me.signature == self.signature:
                     return True
+
+        return False
+
+    def __check_if_right_is_onary(self, expression_list: list, index: int):
+        """
+
+        :param expression_list: the list that contains all the parts of the expression
+        :param index: the current index of this operator in the list
+        :return: if this attribute is to the right of an operator when
+        """
+
+        # if there isn't something to my right
+        if index >= len(expression_list) + 1:
+            return False
+
+        # if its another type of operator then its a problem -> i am an atrribute so i should work on operands of ()
+        next_to_me = expression_list[index + 1]
+        if isinstance(next_to_me, Operator):
+            if next_to_me.signature != self.signature:
+                return True
 
         return False
 

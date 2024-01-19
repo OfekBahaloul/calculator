@@ -33,6 +33,10 @@ def get_input_loop():
         except ZeroDivisionError as e:
             print("division by zero error: ", e)
 
+        except ArithmeticError as e:
+            print("calculation error: ", e)
+
+
         #except Exception as e:
         #    print(e)
 
