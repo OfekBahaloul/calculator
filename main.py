@@ -24,8 +24,17 @@ def get_input_loop():
             print("interrupted")
             expression = "end"
 
-        except Exception as e:
-            print(e)
+        except ValueError as e:
+            print("value error: ", e)
+
+        except TypeError as e:
+            print("type error: ", e)
+
+        except ZeroDivisionError as e:
+            print("division by zero error: ", e)
+
+        #except Exception as e:
+        #    print(e)
 
     print("calculator ends !")
 

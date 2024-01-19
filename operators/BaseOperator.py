@@ -138,75 +138,103 @@ class AttributeOperator(Operator):
 
         return result_expression
 
-    def apply_attribute(self, expression_list: list):
+    def check_direction_correct(self, expression_list: list, index: int):
+        """
+
+        :param expression_list: the list that contains all of the parts of an expression
+        :param index: the index of the current operator
+        :return: nothing, check if i am an onary and if to my direction there is an operator that not myself, if so then
+        its a problam
+        """
+        Operator.check_direction_correct(self, expression_list, index)
+
+        # check direction right
+        if self.direction == "right":
+            if index < len(expression_list) + 1:
+                next_to_me = expression_list[index + 1]
+                if isinstance(next_to_me, Operator):
+                    if next_to_me.signature != self.signature:
+                        raise TypeError("at index ", index, "there is ", self.signature, " and there is to his right a"
+                                                                                         "", next_to_me.signature)
+    def apply_attribute(self, expression_list: list, index: int) -> int:
+        """
+
+        :param expression_list:
+        :param index:
+        :return:
+        """
         # if i am alone or double -> aka is there - or --
         # if i am double then check if i should delte myself
-        if self.__is_double(expression_list):
+        if self.__is_double(expression_list, index):
             # if its the end then, change both to prime onary
-            if len(expression_list) == 2:
+            if index == 1:
                 expression_list.pop()
                 expression_list.pop()
-                return
+                return index - 2
 
             # the value after the double --
-            far_value = expression_list[-3]
+            far_value = expression_list[index - 2]
 
             # if the far value is an operator but not left you can delete it
             if isinstance(far_value, Operator):
                 if not far_value.direction == "left":
                     expression_list.pop()
                     expression_list.pop()
-                    return
+                    return index - 2
 
             # if its ( then remove
             if isinstance(far_value, str):
                 if far_value == '(':
                     expression_list.pop()
                     expression_list.pop()
-                    return
-
-
+                    return index - 2
 
         # if i am the first elemnt then i am onary
-        if len(expression_list) == 1:
+        if index == 0:
             self.priority_level = self.attribute_priority
             self.direction = "right"
             self.uses_num_operands = 1
-            return
+            return index
 
         # there are at least 2 epxressions
-        last_element = expression_list[-2]
+        last_element = expression_list[index - 1]
 
         # if the priv element is a number then the attribute should be normal
         if isinstance(last_element, float):
-            return
+            return index
 
         # if the last elemnt as ) you should be normal
         if last_element == ')':
-            return
+            return index
 
         # if the last elemnt an ( then you should be a normal onary
         if last_element == '(':
             self.priority_level = self.attribute_priority
             self.direction = "right"
             self.uses_num_operands = 1
-            return
+            return index
 
         # if the last element is an onary opereator that applay to left you should be normal
         if isinstance(last_element, Operator):
             if last_element.direction == "left":
-                return
+                return index
 
             # if the last element is an opereator (not left onary) you should be a prime onary
             else:
                 self.__change_to_prim_onary()
-                return
+                return index
 
-        raise  TypeError("attribute | " + self.signature + " | could not be in sequence !")
+        raise TypeError("attribute | " + self.signature + " | could not be in sequence !")
 
-    def __is_double(self, expression_list: list)->bool:
-        if len(expression_list) >= 2:
-            before_me = expression_list[-2]
+    def __is_double(self, expression_list: list, index: int)->bool:
+        """
+
+        :param expression_list:
+        :param index:
+        :return:
+        """
+        if index >= 2:
+            before_me = expression_list[index - 1]
             if isinstance(before_me, Operator):
                 if before_me.signature == self.signature:
                     return True
@@ -214,6 +242,10 @@ class AttributeOperator(Operator):
         return False
 
     def __change_to_prim_onary(self):
+        """
+
+        :return:
+        """
         self.priority_level = 100
         self.direction = "right"
         self.uses_num_operands = 1

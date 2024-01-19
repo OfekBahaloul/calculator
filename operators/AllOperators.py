@@ -254,3 +254,29 @@ class FactorialOperator(Operator):
 
         expression_list.insert(my_index, result)
         return my_index
+
+
+class CountNumberOperator(Operator):
+    def __init__(self):
+        Operator.__init__(self, 6, '#', 1, "left")
+
+    def calc_operation(self, expression_list: list, my_index: int) -> int:
+        """
+
+        :param expression_list: collection of all operations and operands
+        :param my_index: the current index of the operator
+        :return: the index where the result is
+        """
+        # base operation returns the extracted values and the new index position after extraction
+        [values, my_index] = Operator.calc_operation(self, expression_list, my_index)
+
+        result = 0.0
+        to_compute = str(values[0])
+
+        # Add the digit to the sum
+        for char in to_compute:
+            if char.isdigit():
+                result += int(char)
+
+        expression_list.insert(my_index, result)
+        return my_index

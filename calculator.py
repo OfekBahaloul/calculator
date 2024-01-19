@@ -43,6 +43,9 @@ class Calculator:
         # add the factorial operator
         self.__add_operator(AllOperators.FactorialOperator())
 
+        # add the count numbers operator
+        self.__add_operator(AllOperators.CountNumberOperator())
+
     def __add_operator(self, an_operator: BaseOperator.Operator):
         """
 
@@ -105,8 +108,8 @@ class Calculator:
                 raise ValueError(messege)
 
         # remove all white spaces
-        expression.replace(' ', '')
-        expression.replace('\t', '')
+        expression = expression.replace(' ', '')
+        expression = expression.replace('\t', '')
 
         # check for paris of parenthesis and blanks parenthesis
         parenthesis_symmetric_counter = 0
@@ -152,11 +155,7 @@ class Calculator:
                 new_operator = self.all_operators[char].duplicate()
                 expression_list.append(new_operator)
 
-                # if there is already sometihng on the expression list and its an atribute then check if you should
-                # convert its type into an onary or remove complitly if doubled and onary
-                if  isinstance(expression_list[-1], BaseOperator.AttributeOperator):
-                    attribute = expression_list[-1]
-                    attribute.apply_attribute(expression_list)
+
 
                 index += 1
 
@@ -194,6 +193,13 @@ class Calculator:
 
                 expression_list.append(value)
                 index = end_index
+
+        for i in range(len(expression_list)):
+            # if there is already sometihng on the expression list and its an atribute then check if you should
+            # convert its type into an onary or remove complitly if doubled and onary
+            if isinstance(expression_list[i], BaseOperator.AttributeOperator):
+                attribute = expression_list[i]
+                i = attribute.apply_attribute(expression_list, i)
 
         # check for directional operators if their direction is valide -> ~5 !=  5~
         for i in range(0, len(expression_list)):
@@ -242,7 +248,7 @@ class Calculator:
 
     def __calc_phase(self, expression_list: list) -> list:
         curr_index = 0
-        while len(expression_list) > 1:
+        while len(expression_list) > 1 and curr_index < len(expression_list):
             # if we are in an operator
             if isinstance(expression_list[curr_index], BaseOperator.Operator):
                 curr_operator = expression_list[curr_index]
@@ -250,6 +256,9 @@ class Calculator:
 
             else:
                 curr_index += 1
+
+        if len(expression_list) != 1:
+            raise ValueError("entered an extra number without an operator !")
 
         return expression_list
 
