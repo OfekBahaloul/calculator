@@ -15,7 +15,10 @@ class Operator:
         self.direction = direction
 
     def duplicate(self):
-        # Create a new instance with the same attribute values
+        """
+
+        :return: a new instance with the same attribute values
+        """
         return self.__class__()
 
     def calc_operation(self, expression_list: list, my_index: int):
@@ -70,12 +73,20 @@ class Operator:
             if isinstance(value_left, Operator):
                 if value_left.signature == self.signature:
                     return
+                if value_left.direction == "left":
+                    return
 
-            if not (isinstance(value_left,str) and value_left == ")"):
-                if not isinstance(value_left, float):
+                raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
+                                                                                     "incorrect value!")
 
-                    raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
-                                                                                         "incorrect value!")
+            if isinstance(value_left, str) and value_left == "(":
+                raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
+                                                                                     "incorrect value!")
+            # if not (isinstance(value_left,str) and value_left == ")"):
+            #     if not isinstance(value_left, float):
+            #
+            #         raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
+            #                                                                              "incorrect value!")
 
         # if to the left of the operator there is ( then its wrong !
         if self.direction == "both":
@@ -84,7 +95,6 @@ class Operator:
                 if isinstance(to_left, str) and to_left == "(":
                     raise TypeError("at index: ", index, "there is a ", self.signature, "and to his left there is ( "
                                                                                         "which should not be there")
-
 
     def _get_operands(self, expression_list: list, my_index: int) -> list:
         """
@@ -107,7 +117,6 @@ class Operator:
         return to_return_list
 
 
-
 class AttributeOperator(Operator):
     """
     operator that represent an attribute of a number -> for example if he is a positive or negative
@@ -125,8 +134,12 @@ class AttributeOperator(Operator):
         self.attribute_priority = attribute_priority
 
     def combine_operator(self, expression: str) -> str:
-        # takes a row of signature and convert it to the bar minimum -> if odd then there will be 1 time the signature
-        # otherwise there will be 2 times the signature (aka represent odd or ever)
+        """
+
+        :param expression: a string that represent a math expression
+        :return: the same expression but without duplicates of the same attribute -> combines ------- to just -
+        and combine  ---- to --, depends if the amount is odd or even
+        """
         result_expression = ""
 
         combine_counter = 0
@@ -149,9 +162,9 @@ class AttributeOperator(Operator):
     def apply_attribute(self, expression_list: list, index: int) -> int:
         """
 
-        :param expression_list:
-        :param index:
-        :return:
+        :param expression_list: a math expression that is represented by a list of numbers and operator
+        :param index: the current index of the attribute in the list
+        :return: the new index of the attribute (in the case we delete it then the index moves back)
         """
         # if i am alone or double -> aka is there - or --
         # if i am double then check if i should delte myself
@@ -227,9 +240,9 @@ class AttributeOperator(Operator):
     def __is_double(self, expression_list: list, index: int)->bool:
         """
 
-        :param expression_list:
-        :param index:
-        :return:
+        :param expression_list: a math expression that is represented by a list of numbers and operator
+        :param index: the index of the current attribute in the expression list
+        :return: if there is to the left of this attribute another attribute like him
         """
         if index >= 1:
             before_me = expression_list[index - 1]
@@ -262,7 +275,7 @@ class AttributeOperator(Operator):
     def __change_to_prim_onary(self):
         """
 
-        :return:
+        :return: nothing, convert the current attribute to be an onary operators that will always be first
         """
         self.priority_level = 100
         self.direction = "right"

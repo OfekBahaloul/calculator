@@ -24,7 +24,7 @@ def test_calculator():
     """
     my_calculator = calculator.Calculator()
 
-    # calc errors -> count 24
+    # calc errors -> count 25
     assert rapper_calculator(my_calculator, "(1/3)#4") == "error"
     assert rapper_calculator(my_calculator, "!5") == "error"
     assert rapper_calculator(my_calculator, "5()-7") == "error"
@@ -49,8 +49,10 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "2^243214235342") == "error"
     assert rapper_calculator(my_calculator, "3!!!!!") == "error"
     assert rapper_calculator(my_calculator, "1 (%24)") == "error"
+    assert rapper_calculator(my_calculator, "1(!)") == "error"
+    assert rapper_calculator(my_calculator, "5(4)") == "error"
 
-    # calc edge cases -> count 23
+    # calc edge cases -> count 24
     assert rapper_calculator(my_calculator, "(3/5/3)") == "0.2"
     assert rapper_calculator(my_calculator, " ") == "0.0"
     assert rapper_calculator(my_calculator, "~--5") == "-5.0"
@@ -74,6 +76,8 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "-(5*7)") == "-35.0"
     assert rapper_calculator(my_calculator, "0-~-5") == "-5.0"
     assert rapper_calculator(my_calculator, "~-3") == "3.0"
+    assert rapper_calculator(my_calculator, "3.2#!") == "120.0"
+
 
     # calc general expressions -> count 20
     assert rapper_calculator(my_calculator, "3.+3-5*9.4-12345679#") == "-78.0"

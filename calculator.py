@@ -143,7 +143,11 @@ class Calculator:
         return expression
 
     def __format_phase(self, expression: str) -> list:
+        """
 
+        :param expression: a string that represent a math Expression
+        :return: the same expression but as a list, also check many error types
+        """
         current_value = 0
         expression_list = []
         index = 0
@@ -161,6 +165,10 @@ class Calculator:
 
             # if it is a parenthesis
             elif char == ")" or char == "(":
+                # if i am ( and to my left there is a number then its an error
+                if char == "(" and len(expression_list) >= 1 and isinstance(expression_list[-1], float):
+                    raise TypeError("you entered a ", expression_list[-1], "left to a ( which is incorrecrt")
+
                 expression_list.append(char)
                 index += 1
 
@@ -186,7 +194,7 @@ class Calculator:
                 # convert all the area of the number in the string into a number and move the index to its end
                 value = float(expression[index: end_index])
 
-                # if left is ) then error
+                # if left is ) then error because to the right of an ) there should be an operator not a number
                 if len(expression_list) >= 1 and isinstance(expression_list[-1], str):
                     if expression_list[-1] == ")":
                         raise TypeError("you entered a ", value, "right next to a ) which is incorrecrt")
@@ -213,6 +221,11 @@ class Calculator:
         return expression_list
 
     def __covert_phase(self, expression_list: list) -> list:
+        """
+
+        :param expression_list: a list that represent a math expression
+        :return: the same expression but in prefix form
+        """
         result_list = []
         operator_list = []
 
@@ -250,6 +263,11 @@ class Calculator:
         return result_list
 
     def __calc_phase(self, expression_list: list) -> list:
+        """
+
+        :param expression_list: a list that represents a math expression in prefix form
+        :return: a list with length of one, when its first elemnt is the result of the math expression
+        """
         curr_index = 0
         while len(expression_list) > 1 and curr_index < len(expression_list):
             # if we are in an operator
@@ -279,7 +297,6 @@ class Calculator:
                and self.__should_continue_dump(value, operation_stuck[-1])):
                 result_list.append(operation_stuck.pop())
 
-
         # if there is a remnent of (,) we should delete it.
         if len(operation_stuck) != 0 and isinstance(operation_stuck[-1],str) and operation_stuck[-1] == "("\
                 and isinstance(value, str) and value == ")":
@@ -287,7 +304,8 @@ class Calculator:
 
         return result_list
 
-    def __should_insert_operator(self, value_signature: (str, BaseOperator.Operator),
+    @staticmethod
+    def __should_insert_operator(value_signature: (str, BaseOperator.Operator),
                                  last_signature: (str, BaseOperator.Operator)) -> bool:
         """
 
@@ -312,7 +330,8 @@ class Calculator:
 
         raise TypeError("in the operation stuck there was an instance of an object that was not ment to be there")
 
-    def __should_continue_dump(self, value_signature: (str, BaseOperator.Operator),
+    @staticmethod
+    def __should_continue_dump(value_signature: (str, BaseOperator.Operator),
                                last_signature: (str, BaseOperator.Operator)) -> bool:
         """
 
@@ -336,7 +355,13 @@ class Calculator:
 
         raise TypeError("in the operation stuck there was an instance of an object that was not ment to be there")
 
-    def __print_expression_list(self, expression_list: list):
+    @staticmethod
+    def __print_expression_list(expression_list: list):
+        """
+
+        :param expression_list: a list that represent a math expression
+        :return: nothing, it prints the list into the console
+        """
         print("the expression list:\t", end="")
         for i in expression_list:
             if isinstance(i, BaseOperator.Operator):
