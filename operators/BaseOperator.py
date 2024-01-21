@@ -90,11 +90,13 @@ class Operator:
             if isinstance(value_left, str) and value_left == "(":
                 raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
                                                                                      "incorrect value!")
-            # if not (isinstance(value_left,str) and value_left == ")"):
-            #     if not isinstance(value_left, float):
-            #
-            #         raise TypeError("at index: ", index, " there is a ", self.signature, " and at his left there is an"
-            #                                                                              "incorrect value!")
+            # if to the right of me there is ( then its error !
+            if len(expression_list)-1 != index:
+                value_right = expression_list[index + 1]
+                if isinstance(value_right, str) and value_right == "(":
+                    raise TypeError("at index: ", index, " there is a ", self.signature, " and to his right side "
+                                                                                         "there is ("
+                                                                                         "which is wrong !")
 
         # if to the left of the operator there is ( then its wrong !
         if self.direction == "both":
