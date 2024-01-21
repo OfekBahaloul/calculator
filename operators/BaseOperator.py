@@ -61,12 +61,17 @@ class Operator:
                                                                                          "there is an"
                                                                                          "incorrect value!")
 
-            # if to the left of me there is ) then its error !
+            # if to the left of me there is ) or onary left operator then its error !
             if index > 0:
                 value_left =  expression_list[index - 1]
                 if isinstance(value_left, str) and value_left == ")":
                     raise TypeError("at index: ", index, " there is a ", self.signature, " and to his left side "
                                                                                          "there is )"
+                                                                                         "which is wrong !")
+
+                if isinstance(value_left, Operator) and value_left.direction == "left":
+                    raise TypeError("at index: ", index, " there is a ", self.signature, " and to his left side "
+                                                                                         "there is an left onary"
                                                                                          "which is wrong !")
 
         # if from the left side of an right operator there is an
