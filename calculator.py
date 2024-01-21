@@ -125,7 +125,11 @@ class Calculator:
                 raise ValueError("syntax error,  a parenthesis does not his counter part !")
 
             if priv_char == "(" and char == ")":
-                raise TypeError("a blank parenthesis was enterd !")
+                raise TypeError("a blank parenthesis was enterd!")
+
+            if  priv_char == ")" and char == "(":
+                raise TypeError("a parenthesis cant be next to each other !")
+
 
             priv_char = char
 
