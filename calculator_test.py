@@ -51,6 +51,7 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "1 (%24)") == "error"
     assert rapper_calculator(my_calculator, "1(!)") == "error"
     assert rapper_calculator(my_calculator, "5(4)") == "error"
+    assert rapper_calculator(my_calculator, "~ (1 5%4 /10) # * 20") == "error"
 
     # calc edge cases -> count 24
     assert rapper_calculator(my_calculator, "(3/5/3)") == "0.2"
@@ -88,7 +89,6 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "3  &-6^ 2- (17# * 4 + 4@-3)*5") == "-126.5"
     assert rapper_calculator(my_calculator, " ~(3!! * -0.5 * (0.5 % 0.2))") == "36.0"
     assert rapper_calculator(my_calculator, "15 !&7 *(4 7) -15 4") == "175.0"
-    assert rapper_calculator(my_calculator, "~ (1 5%4 /10) # * 20") == "60.0"
     assert rapper_calculator(my_calculator, "9 !$ 1 0!&-5^ 5 / 5 ^ 5 ") == "-1.0"
     assert rapper_calculator(my_calculator, "(12341234*0.001--147&-200)/1000") == "12.541234"
     assert rapper_calculator(my_calculator, "90 % 5 * (25 -- 7&4 ^3$-8 +4)") == "0.0"

@@ -270,6 +270,9 @@ class CountNumberOperator(Operator):
         # base operation returns the extracted values and the new index position after extraction
         [values, my_index] = Operator.calc_operation(self, expression_list, my_index)
 
+        if values[0] < 0:
+            raise ArithmeticError("# cannot compute a negative number !")
+
         result = 0.0
         to_compute = str(values[0])
 
