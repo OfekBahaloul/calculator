@@ -53,6 +53,8 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "5(4)") == "error"
     assert rapper_calculator(my_calculator, "~ (1 5%4 /10) # * 20") == "error"
     assert rapper_calculator(my_calculator, "(1)(3)+") == "error"
+    assert rapper_calculator(my_calculator, "(2)~(2) +") == "error"
+
 
     # calc edge cases -> count 24
     assert rapper_calculator(my_calculator, "(3/5/3)") == "0.2"
