@@ -19,8 +19,7 @@ def rapper_calculator(calc: calculator.Calculator, expression: str) -> str:
 def test_calculator():
     """
 
-    :param expression:
-    :return:
+    :return: nothing, it test if the calculator works properly
     """
     my_calculator = calculator.Calculator()
 
@@ -57,7 +56,6 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "(2)!(2) +") == "error"
     assert rapper_calculator(my_calculator, "3!~4+") == "error"
 
-
     # calc edge cases -> count 24
     assert rapper_calculator(my_calculator, "(3/5/3)") == "0.2"
     assert rapper_calculator(my_calculator, " ") == "0.0"
@@ -83,7 +81,6 @@ def test_calculator():
     assert rapper_calculator(my_calculator, "0-~-5") == "-5.0"
     assert rapper_calculator(my_calculator, "~-3") == "3.0"
     assert rapper_calculator(my_calculator, "3.2#!") == "120.0"
-
 
     # calc general expressions -> count 20
     assert rapper_calculator(my_calculator, "3.+3-5*9.4-12345679#") == "-78.0"

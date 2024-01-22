@@ -81,7 +81,8 @@ class Operator:
             if index == 0:
                 raise TypeError("cannot put ", self.signature, " in the start of the calculation !")
 
-            # if to the left of the operator there is something that is not ) and not a number and not himself, its wrong !
+            # if to the left of the operator there is something that is not ) and not a
+            # number and not himself, its wrong !
             value_left = expression_list[index - 1]
             if isinstance(value_left, Operator):
                 if value_left.signature == self.signature:
@@ -136,7 +137,8 @@ class AttributeOperator(Operator):
     """
     operator that represent an attribute of a number -> for example if he is a positive or negative
     """
-    def __init__(self, priority_level: float, signature: str, uses_num_operands: int, direction: str, attribute_priority: float):
+    def __init__(self, priority_level: float, signature: str, uses_num_operands: int, direction: str,
+                 attribute_priority: float):
         """
 
         :param priority_level: the priority of the operator when its function as an operator
@@ -213,8 +215,6 @@ class AttributeOperator(Operator):
                     expression_list.pop(index - 1)
                     return index - 2
 
-
-
         # if i am the first elemnt then i am onary
         if index == 0:
             self.priority_level = self.attribute_priority
@@ -252,7 +252,7 @@ class AttributeOperator(Operator):
 
         raise TypeError("attribute | " + self.signature + " | could not be in sequence !")
 
-    def __is_double(self, expression_list: list, index: int)->bool:
+    def __is_double(self, expression_list: list, index: int) -> bool:
         """
 
         :param expression_list: a math expression that is represented by a list of numbers and operator

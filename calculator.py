@@ -110,7 +110,6 @@ class Calculator:
                 messege = "this is not a valid letter: " + char
                 raise ValueError(messege)
 
-
         # check for paris of parenthesis and blanks parenthesis
         parenthesis_symmetric_counter = 0
         priv_char = " "
@@ -129,7 +128,6 @@ class Calculator:
 
             if  priv_char == ")" and char == "(":
                 raise TypeError("a parenthesis cant be next to each other !")
-
 
             priv_char = char
 
@@ -162,8 +160,6 @@ class Calculator:
             if char in self.all_operators.keys():
                 new_operator = self.all_operators[char].duplicate()
                 expression_list.append(new_operator)
-
-
 
                 index += 1
 
@@ -266,7 +262,8 @@ class Calculator:
 
         return result_list
 
-    def __calc_phase(self, expression_list: list) -> list:
+    @staticmethod
+    def __calc_phase(expression_list: list) -> list:
         """
 
         :param expression_list: a list that represents a math expression in prefix form

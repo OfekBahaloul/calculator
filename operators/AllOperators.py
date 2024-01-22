@@ -277,9 +277,14 @@ class CountNumberOperator(Operator):
         to_compute = str(values[0])
 
         # Add the digit to the sum
+        should_sum = True
         for char in to_compute:
-            if char.isdigit():
-                result += int(char)
+            if should_sum:
+                if char.isdigit():
+                    result += int(char)
+
+                elif char == "e":
+                    should_sum = False
 
         expression_list.insert(my_index, result)
         return my_index
